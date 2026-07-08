@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+  # --- BASE DE DATOS RELACIONAL ---
+  db_despacho:
+    image: mysql:8.0
+    container_name: db_despacho
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: despacho_db
+      MYSQL_USER: devuser
+      MYSQL_PASSWORD: devpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - network_devops
+
+  # --- BACKEND 1: DESPACHOS (Spring Boot) ---
+  back_despachos:
+    build:
+      context: ./back-Despachos_SpringBoot
+      dockerfile: Dockerfile
+    container_name: back_despachos
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db_despacho:3306/despacho_db?allowPublicKeyRetrieval=true&useSSL=false
+      - SPRING_DATASOURCE_USERNAME=devuser
+      - SPRING_DATASOURCE_PASSWORD=devpassword
+    depends_on:
+      - db_despacho
+    networks:
+      - network_devops
+
+  # --- BACKEND 2: VENTAS (Spring Boot) ---
+  back_ventas:
+    build:
+      context: ./back-Ventas_SpringBoot
+      dockerfile: Dockerfile
+    container_name: back_ventas
+    restart: always
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db_despacho:3306/despacho_db?allowPublicKeyRetrieval=true&useSSL=false
+      - SPRING_DATASOURCE_USERNAME=devuser
+      - SPRING_DATASOURCE_PASSWORD=devpassword
+    depends_on:
+      - db_despacho
+    networks:
+      - network_devops
+
+  # --- FRONTEND (Vite / React / Nginx) ---
+  front_despacho:
+    build:
+      context: ./front_despacho
+      dockerfile: Dockerfile
+    container_name: front_despacho
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - back_despachos
+      - back_ventas
+    networks:
+      - network_devops
+
+# --- REDES Y VOLÚMENES (Exigido en Rúbrica) ---
+volumes:
+  db_data: # Persistencia de datos para la BD relacional
+
+networks:
+  network_devops:
+    driver: bridge # Red interna aislada para la comunicación de componentes
