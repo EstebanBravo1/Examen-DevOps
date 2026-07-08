@@ -1,0 +1,24 @@
+.DS_Store
+
+# Node / frontend
+node_modules/
+dist/
+dist-ssr/
+coverage/
+*.log
+*.local
+
+# Java / Spring Boot
+target/
+*.class
+
+# IDEs / editors
+.vscode/
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# OS / temp files
+Thumbs.db
+Desktop.ini
