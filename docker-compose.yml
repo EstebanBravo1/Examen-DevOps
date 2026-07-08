@@ -21,7 +21,8 @@ services:
   # --- BACKEND 1: DESPACHOS (Spring Boot) ---
   back_despachos:
     build:
-      context: ./back-Despachos_SpringBoot
+      # Apuntamos directamente a la subcarpeta donde está el código y el pom.xml
+      context: ./back-Despachos_SpringBoot/Springboot-API-REST-DESPACHO
       dockerfile: Dockerfile
     container_name: back_despachos
     restart: always
@@ -39,7 +40,8 @@ services:
   # --- BACKEND 2: VENTAS (Spring Boot) ---
   back_ventas:
     build:
-      context: ./back-Ventas_SpringBoot
+      # Hacemos lo mismo con Ventas apuntando a su subcarpeta de código
+      context: ./back-Ventas_SpringBoot/Springboot-API-REST-REST
       dockerfile: Dockerfile
     container_name: back_ventas
     restart: always
