@@ -68,3 +68,4 @@ jobs:
         file: ./front_despacho/Dockerfile
         push: true
         tags: estebanbravo/front-despacho:latest
+        
