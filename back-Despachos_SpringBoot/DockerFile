@@ -1,0 +1,27 @@
+# --- ETAPA 1: Compilación ---
+FROM maven:3.9.6-eclipse-temurin-17-alpine AS build
+WORKDIR /app
+
+# Copiar archivos de configuración de Maven y dependencias
+COPY pom.xml .
+RUN mvn dependency:go-offline -B
+
+# Copiar el código fuente y compilar el archivo JAR (omitiendo tests para acelerar el build)
+COPY src ./src
+RUN mvn package -DskipTests
+
+# --- ETAPA 2: Entorno de Producción ---
+FROM eclipse-temurin:17-jre-alpine
+WORKDIR /app
+
+# Buenas prácticas de seguridad: Ejecutar como usuario no raíz (Endurecimiento)
+RUN addgroup -S spring && adduser -S spring -G spring
+USER spring:spring
+
+# Copiar el JAR generado en la etapa anterior
+COPY --from=build /app/target/*.jar app.jar
+
+# Exponer el puerto del microservicio (ajusta el puerto si usa uno diferente al 8081)
+EXPOSE 8081
+
+ENTRYPOINT ["java", "-jar", "app.jar"]

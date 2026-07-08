@@ -1,0 +1,22 @@
+# --- ETAPA 1: Construcción del Frontend ---
+FROM node:20-alpine AS build
+WORKDIR /app
+
+# Copiar archivos de dependencias
+COPY package*.json ./
+RUN npm ci
+
+# Copiar código fuente y compilar con Vite
+COPY . .
+RUN npm run build
+
+# --- ETAPA 2: Servidor de Producción Minimalista ---
+FROM nginx:1.25-alpine
+
+# Copiar los archivos estáticos compilados al directorio de Nginx
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Exponer el puerto estándar HTTP
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
