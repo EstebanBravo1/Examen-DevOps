@@ -48,16 +48,16 @@ jobs:
     - name: Build & Push - Backend Despachos
       uses: docker/build-push-action@v5
       with:
-        context: ./back-Despachos_SpringBoot
-        file: ./back-Despachos_SpringBoot/Dockerfile
+        context: ./back-Despachos_SpringBoot/Springboot-API-REST-DESPACHO
+        file: ./back-Despachos_SpringBoot/Springboot-API-REST-DESPACHO/DockerFile
         push: true
         tags: estebanbravo/back-despachos:latest
 
     - name: Build & Push - Backend Ventas
       uses: docker/build-push-action@v5
       with:
-        context: ./back-Ventas_SpringBoot
-        file: ./back-Ventas_SpringBoot/Dockerfile
+        context: ./back-Ventas_SpringBoot/Springboot-API-REST
+        file: ./back-Ventas_SpringBoot/Springboot-API-REST/DockerFile
         push: true
         tags: estebanbravo/back-ventas:latest
 
@@ -65,7 +65,7 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: ./front_despacho
-        file: ./front_despacho/Dockerfile
+        file: ./front_despacho/DockerFile
         push: true
         tags: estebanbravo/front-despacho:latest
         
